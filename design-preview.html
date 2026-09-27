@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>John Lee Calulut — Portfolio Design Preview</title>
+<style>
+  :root {
+    --ink: #050505;
+    --ink-soft: #111111;
+    --ink-card: #171717;
+    --ink-border: #262626;
+    --accent: #f97316;
+    --accent-hover: #fb923c;
+    --text: #ffffff;
+    --text-2: #a3a3a3;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: Inter, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "JetBrains Mono", Menlo, Consolas, monospace; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: fixed; inset: 0 auto 0 0; width: 80px; z-index: 40;
+    background: rgba(17,17,17,.95); border-right: 1px solid var(--ink-border);
+    display: flex; flex-direction: column;
+    transition: width .3s ease; overflow: hidden; backdrop-filter: blur(8px);
+  }
+  .sidebar:hover { width: 256px; }
+  .brand { display: flex; align-items: center; gap: 16px; height: 80px; padding: 0 20px; border-bottom: 1px solid var(--ink-border); white-space: nowrap; }
+  .brand .mark { display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; flex-shrink: 0; border-radius: 12px; background: var(--accent); color: #050505; font: 700 14px "JetBrains Mono", monospace; }
+  .brand .who { opacity: 0; transition: opacity .2s; }
+  .sidebar:hover .who { opacity: 1; }
+  .brand .who b { display: block; font-size: 14px; }
+  .brand .who span { font-size: 12px; color: var(--text-2); }
+  .nav { flex: 1; padding: 24px 12px; }
+  .nav a {
+    display: flex; align-items: center; gap: 16px; padding: 12px; border-radius: 12px;
+    color: var(--text-2); text-decoration: none; font-size: 14px; white-space: nowrap;
+    transition: color .2s, background .2s;
+  }
+  .nav a:hover { color: #fff; background: rgba(255,255,255,.05); }
+  .nav a.active { color: var(--accent-hover); background: rgba(249,115,22,.10); }
+  .nav a svg { width: 20px; height: 20px; flex-shrink: 0; }
+  .nav a span { opacity: 0; transition: opacity .2s; }
+  .sidebar:hover .nav a span { opacity: 1; }
+  .socials { padding: 16px 12px; border-top: 1px solid var(--ink-border); }
+  .socials a { display: flex; align-items: center; gap: 16px; padding: 10px 12px; border-radius: 12px; color: var(--text-2); transition: color .2s; }
+  .socials a:hover { color: var(--accent-hover); }
+  .socials svg { width: 20px; height: 20px; }
+  .socials a span { opacity: 0; font-size: 14px; white-space: nowrap; transition: opacity .2s; }
+  .sidebar:hover .socials a span { opacity: 1; }
+
+  .page { padding-left: 80px; }
+  .container { max-width: 1152px; margin: 0 auto; padding: 96px 24px; }
+  section + section { border-top: 1px solid var(--ink-border); }
+  .alt { background: rgba(17,17,17,.4); }
+
+  .eyebrow { color: var(--accent); font-size: 14px; }
+  h2 { font-size: clamp(28px, 4vw, 36px); font-weight: 700; letter-spacing: -0.02em; margin-top: 12px; }
+  .lead { color: var(--text-2); margin-top: 16px; line-height: 1.65; max-width: 640px; }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; min-height: 100vh; display: flex; align-items: center; overflow: hidden; }
+  .hero::before {
+    content: ""; position: absolute; inset: 0;
+    background-image: radial-gradient(circle, rgba(249,115,22,.12) 1px, transparent 1px);
+    background-size: 28px 28px; opacity: .7;
+  }
+  .hero::after { content: ""; position: absolute; top: -96px; right: 25%; width: 320px; height: 320px; border-radius: 50%; background: rgba(249,115,22,.10); filter: blur(48px); }
+  .hero-grid { position: relative; display: grid; gap: 56px; width: 100%; align-items: center; }
+  @media (min-width: 1024px) { .hero-grid { grid-template-columns: 1.1fr 1fr; } }
+  h1 { font-size: clamp(36px, 5vw, 48px); font-weight: 800; letter-spacing: -0.03em; margin-top: 16px; line-height: 1.1; }
+  h1 .accent { color: var(--accent); }
+  .role { font-size: 20px; font-weight: 600; color: #e5e5e5; margin-top: 16px; }
+  .hero p.copy { color: var(--text-2); margin-top: 16px; max-width: 460px; line-height: 1.65; }
+  .copy .hl { color: var(--accent-hover); }
+  .ctas { display: flex; flex-wrap: wrap; gap: 16px; margin-top: 32px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px; border-radius: 12px;
+    padding: 12px 24px; font-size: 14px; font-weight: 600; text-decoration: none;
+    transition: all .5s;
+  }
+  .btn-primary { border: 1px solid #737373; color: #fff; }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); color: #050505; transform: scale(1.05); }
+  .btn-outline { border: 1px solid var(--ink-border); background: var(--ink-soft); color: #d4d4d4; }
+  .btn-outline:hover { border-color: rgba(249,115,22,.6); color: var(--accent-hover); transform: scale(1.05); }
+  .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 40px; list-style: none; }
+  .badges li { border: 1px solid var(--ink-border); background: rgba(17,17,17,.8); border-radius: 8px; padding: 6px 12px; font: 12px "JetBrains Mono", monospace; color: #d4d4d4; }
+
+  /* Editor mock */
+  .editor { position: relative; border: 1px solid var(--ink-border); border-radius: 16px; background: rgba(17,17,17,.9); box-shadow: 0 0 40px -10px rgba(249,115,22,.25); backdrop-filter: blur(8px); }
+  .editor-bar { display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--ink-border); padding: 12px 16px; }
+  .dot { width: 12px; height: 12px; border-radius: 50%; background: #404040; }
+  .dot.o { background: var(--accent); }
+  .editor-bar .file { margin-left: 12px; font: 12px "JetBrains Mono", monospace; color: #737373; }
+  .editor pre { padding: 24px; font: 13px/1.9 "JetBrains Mono", monospace; color: #d4d4d4; overflow-x: auto; }
+  .k { color: var(--accent-hover); } .s { color: #fdba74; } .w { color: #fff; }
+  .float-badge {
+    position: absolute; border: 1px solid var(--ink-border); background: var(--ink-card);
+    border-radius: 12px; padding: 8px 16px; font: 600 12px "JetBrains Mono", monospace;
+    color: var(--accent-hover); box-shadow: 0 0 40px -10px rgba(249,115,22,.25);
+  }
+
+  /* ---------- Cards ---------- */
+  .card { background: var(--ink-card); border: 1px solid var(--ink-border); border-radius: 16px; padding: 24px; }
+  .card-lift { transition: all .5s; }
+  .card-lift:hover { transform: translateY(-4px); border-color: rgba(249,115,22,.4); }
+  .icon-chip { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; border: 1px solid rgba(249,115,22,.3); background: rgba(249,115,22,.1); color: var(--accent); flex-shrink: 0; }
+  .icon-chip svg { width: 20px; height: 20px; }
+
+  .grid-2 { display: grid; gap: 20px; } @media (min-width: 640px) { .grid-2 { grid-template-columns: repeat(2, 1fr); } }
+  .grid-3 { display: grid; gap: 20px; } @media (min-width: 640px) { .grid-3 { grid-template-columns: repeat(2, 1fr); } } @media (min-width: 1024px) { .grid-3 { grid-template-columns: repeat(3, 1fr); } }
+
+  .group-label { display: flex; align-items: center; gap: 12px; color: var(--accent); font-size: 14px; margin: 48px 0 24px; }
+  .group-label::before { content: ""; width: 32px; height: 1px; background: rgba(249,115,22,.5); }
+
+  .skill h3 { font-size: 15px; font-weight: 600; }
+  .skill p { font-size: 13px; color: var(--text-2); margin-top: 2px; }
+  .bar { height: 6px; background: var(--ink); border-radius: 999px; margin-top: 8px; overflow: hidden; }
+  .bar i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #ea580c, var(--accent-hover)); }
+  .bar-meta { display: flex; justify-content: space-between; font-size: 12px; color: #737373; margin-top: 20px; }
+  .bar-meta b { color: var(--accent-hover); font-family: "JetBrains Mono", monospace; font-weight: 500; }
+
+  .service h3 { font-size: 17px; font-weight: 600; margin-top: 20px; }
+  .service p { font-size: 14px; color: var(--text-2); margin-top: 8px; line-height: 1.6; }
+
+  .project { overflow: hidden; padding: 0; display: flex; flex-direction: column; transition: all .5s; }
+  .project:hover { transform: translateY(-8px); border-color: rgba(249,115,22,.6); box-shadow: 0 25px 50px -12px rgba(0,0,0,.6); }
+  .thumb { position: relative; height: 176px; border-bottom: 1px solid var(--ink-border); background: var(--ink-soft); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  .thumb::before { content: ""; position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(249,115,22,.12) 1px, transparent 1px); background-size: 28px 28px; opacity: .6; }
+  .thumb svg { position: relative; width: 40px; height: 40px; color: rgba(249,115,22,.8); }
+  .project .body { padding: 24px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+  .project h3 { font-size: 17px; font-weight: 600; }
+  .project .desc { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+  .tags li { border: 1px solid var(--ink-border); background: var(--ink); border-radius: 6px; padding: 4px 10px; font: 12px "JetBrains Mono", monospace; color: var(--accent-hover); }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 8px; }
+  .action { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--ink-border); border-radius: 8px; padding: 8px 16px; font-size: 12px; font-weight: 600; color: #525252; }
+  .action svg { width: 16px; height: 16px; }
+
+  /* ---------- Timeline ---------- */
+  .timeline { list-style: none; border-left: 1px solid var(--ink-border); padding-left: 32px; max-width: 640px; }
+  .timeline li { position: relative; padding-bottom: 40px; }
+  .timeline li:last-child { padding-bottom: 0; }
+  .timeline li::before {
+    content: ""; position: absolute; left: -41px; top: 4px; width: 18px; height: 18px;
+    border-radius: 50%; border: 1px solid var(--accent); background: var(--ink);
+  }
+  .timeline li::after { content: ""; position: absolute; left: -35px; top: 10px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+  .timeline h3 { font-size: 17px; font-weight: 600; }
+  .timeline .sub { font-size: 14px; color: rgba(251,146,60,.8); margin-top: 2px; }
+  .timeline p.d { font-size: 14px; color: var(--text-2); margin-top: 8px; line-height: 1.6; }
+
+  /* ---------- Contact ---------- */
+  .contact-grid { display: grid; gap: 40px; margin-top: 56px; }
+  @media (min-width: 1024px) { .contact-grid { grid-template-columns: 1fr 1.4fr; } }
+  .field label { display: block; font-size: 14px; font-weight: 500; color: #d4d4d4; margin-bottom: 8px; }
+  .field input, .field textarea {
+    width: 100%; background: var(--ink-soft); border: 1px solid var(--ink-border); border-radius: 12px;
+    padding: 12px 16px; font-size: 14px; color: #fff; font-family: inherit; transition: border-color .3s;
+  }
+  .field input::placeholder, .field textarea::placeholder { color: #525252; }
+  .field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+  .form-grid { display: grid; gap: 20px; }
+  @media (min-width: 640px) { .form-grid .two { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; } }
+
+  /* ---------- Footer ---------- */
+  footer { border-top: 1px solid var(--ink-border); background: var(--ink-soft); }
+  .footer-in { max-width: 1152px; margin: 0 auto; padding: 48px 24px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between; }
+  .footer-in .name { font-weight: 600; }
+  .footer-in .role2 { font-size: 14px; color: #737373; margin-top: 4px; }
+  .fine { border-top: 1px solid var(--ink-border); padding: 24px; text-align: center; font-size: 12px; color: #525252; }
+  .fine .o { color: rgba(249,115,22,.8); }
+
+  /* ---------- Mobile ---------- */
+  .topbar { display: none; }
+  @media (max-width: 1023px) {
+    .sidebar { display: none; }
+    .page { padding-left: 0; }
+    .topbar {
+      display: flex; position: fixed; top: 0; left: 0; right: 0; z-index: 40; height: 64px;
+      align-items: center; justify-content: space-between; padding: 0 16px;
+      background: rgba(5,5,5,.85); border-bottom: 1px solid var(--ink-border); backdrop-filter: blur(8px);
+    }
+    .topbar .mark { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 8px; background: var(--accent); color: #050505; font: 700 14px "JetBrains Mono", monospace; }
+    .topbar .burger { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 12px; border: 1px solid var(--ink-border); color: #d4d4d4; }
+    .hero { padding-top: 64px; }
+    main { padding-top: 64px; }
+    .editor-wrap { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Mobile top bar -->
+<header class="topbar">
+  <div style="display:flex;align-items:center;gap:12px;">
+    <span class="mark">JC</span>
+    <span style="font-size:14px;font-weight:600;">John Lee Calulut</span>
+  </div>
+  <button class="burger" aria-label="Open menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+  </button>
+</header>
+
+<!-- Desktop sidebar -->
+<aside class="sidebar" aria-label="Primary navigation">
+  <a class="brand" href="#home">
+    <span class="mark">JC</span>
+    <span class="who"><b>John Lee Calulut</b><span>Frontend / Backend Developer</span></span>
+  </a>
+  <nav class="nav">
+    <a href="#home" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5M5 9.5V21h5v-6h4v6h5V9.5"/></svg><span>Home</span></a>
+    <a href="#about"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 9a7 7 0 0 1 14 0"/></svg><span>About</span></a>
+    <a href="#skills"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4m8-8 5 4-5 4M13 5l-2 14"/></svg><span>Skills</span></a>
+    <a href="#services"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h16v12H4zM9 8V6a3 3 0 0 1 6 0v2M4 13h16"/></svg><span>Services</span></a>
+    <a href="#projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7h6l2 2h10v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg><span>Projects</span></a>
+    <a href="#experience"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm0-13v5l3 3"/></svg><span>Experience</span></a>
+    <a href="#contact"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg><span>Contact</span></a>
+  </nav>
+  <div class="socials">
+    <a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.05.78 2.13 0 1.54-.01 2.78-.01 3.16 0 .31.21.67.8.55A11.52 11.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg><span>GitHub</span></a>
+    <a href="#"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.55V9h3.57v11.45Z"/></svg><span>LinkedIn</span></a>
+  </div>
+</aside>
+
+<div class="page">
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+    <div class="container hero-grid">
+      <div>
+        <p class="eyebrow mono">// hello world</p>
+        <h1>Hi, I'm <span class="accent">John Lee Calulut</span></h1>
+        <p class="role">Frontend / Backend Developer</p>
+        <p class="copy">I build modern, responsive and scalable web applications using
+          <span class="hl">Laravel</span>, <span class="hl">Vue</span> and <span class="hl">Tailwind CSS</span>.</p>
+        <div class="ctas">
+          <a class="btn btn-primary" href="#projects">View My Projects</a>
+          <a class="btn btn-outline" href="#contact">Contact Me</a>
+        </div>
+        <ul class="badges">
+          <li>Laravel</li><li>Vue.js</li><li>Tailwind CSS</li><li>PHP</li><li>JavaScript</li><li>MySQL</li>
+        </ul>
+      </div>
+      <div class="editor-wrap" style="position:relative;">
+        <div class="editor" aria-hidden="true">
+          <div class="editor-bar"><span class="dot"></span><span class="dot"></span><span class="dot o"></span><span class="file">PortfolioController.php</span></div>
+          <pre><span class="k">class</span> <span class="w">PortfolioController</span>
+{
+    <span class="k">public function</span> <span class="w">index</span>(): <span class="w">Response</span>
+    {
+        <span class="k">return</span> Inertia::render(<span class="s">'Portfolio'</span>, [
+            <span class="s">'stack'</span> =&gt; [<span class="s">'Laravel'</span>, <span class="s">'Vue'</span>, <span class="s">'Tailwind'</span>],
+            <span class="s">'design'</span> =&gt; <span class="s">'dark · minimal · technical'</span>,
+        ]);
+    }
+}</pre>
+        </div>
+        <span class="float-badge" style="left:-16px;bottom:40px;">Laravel</span>
+        <span class="float-badge" style="right:-16px;top:-16px;">Vue.js</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="container">
+      <div class="grid-2" style="gap:48px;align-items:start;">
+        <div>
+          <p class="eyebrow mono">// about</p>
+          <h2>A developer who owns the whole stack</h2>
+          <div class="lead" style="max-width:none;">
+            <p>I'm <b style="color:#fff;">John Lee Calulut</b>, a frontend and backend developer. I build modern, responsive web applications — from the database schema all the way to the interface people actually touch.</p>
+            <p style="margin-top:16px;">My day-to-day stack is <span class="hl" style="color:var(--accent-hover);">Laravel</span> on the backend and <span class="hl" style="color:var(--accent-hover);">Vue</span> on the frontend, connected with Inertia and styled with <span class="hl" style="color:var(--accent-hover);">Tailwind CSS</span>. I care about clean architecture: thin controllers, honest models, and components built once and reused everywhere.</p>
+          </div>
+        </div>
+        <ul class="grid-2" style="list-style:none;">
+          <li class="card"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5"/></svg></span><p style="font-size:14px;font-weight:600;margin-top:12px;line-height:1.4;">Full-Stack Development</p></li>
+          <li class="card"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h12v9H4zM16 9h4v8h-4M9 19h4"/></svg></span><p style="font-size:14px;font-weight:600;margin-top:12px;line-height:1.4;">Responsive Web Design</p></li>
+          <li class="card"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/></svg></span><p style="font-size:14px;font-weight:600;margin-top:12px;line-height:1.4;">Reusable Components</p></li>
+          <li class="card"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4zM7 9l3 3-3 3m5 0h5"/></svg></span><p style="font-size:14px;font-weight:600;margin-top:12px;line-height:1.4;">Modern Web Technologies</p></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SKILLS -->
+  <section id="skills" class="alt">
+    <div class="container">
+      <p class="eyebrow mono">// skills</p>
+      <h2>Tech stack</h2>
+      <p class="lead">The technologies I build with every day — grouped by where they live in the stack.</p>
+
+      <h3 class="group-label mono">Frontend</h3>
+      <div class="grid-3">
+        <div class="card skill"><div style="display:flex;gap:16px;align-items:center;"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H4zM9 20h6m-3-5v5"/></svg></span><div><h3>Vue.js</h3><p>Reactive interfaces with the Composition API.</p></div></div><div class="bar-meta"><span>Proficiency</span><b>85%</b></div><div class="bar"><i style="width:85%"></i></div></div>
+        <div class="card skill"><div style="display:flex;gap:16px;align-items:center;"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4m8-8 5 4-5 4M13 5l-2 14"/></svg></span><div><h3>JavaScript</h3><p>Modern ES6+ and browser APIs.</p></div></div><div class="bar-meta"><span>Proficiency</span><b>80%</b></div><div class="bar"><i style="width:80%"></i></div></div>
+        <div class="card skill"><div style="display:flex;gap:16px;align-items:center;"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4zM7 9l3 3-3 3m5 0h5"/></svg></span><div><h3>Tailwind CSS</h3><p>Utility-first styling and design systems.</p></div></div><div class="bar-meta"><span>Proficiency</span><b>85%</b></div><div class="bar"><i style="width:85%"></i></div></div>
+      </div>
+
+      <h3 class="group-label mono">Backend</h3>
+      <div class="grid-3">
+        <div class="card skill"><div style="display:flex;gap:16px;align-items:center;"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v6H4zM4 13h16v6H4zM7.5 8h.01M7.5 16h.01"/></svg></span><div><h3>Laravel</h3><p>MVC apps, Eloquent, queues, validation.</p></div></div><div class="bar-meta"><span>Proficiency</span><b>80%</b></div><div class="bar"><i style="width:80%"></i></div></div>
+        <div class="card skill"><div style="display:flex;gap:16px;align-items:center;"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m8 8-5 4 5 4m8-8 5 4-5 4M13 5l-2 14"/></svg></span><div><h3>REST APIs</h3><p>Clean, versioned API design and auth.</p></div></div><div class="bar-meta"><span>Proficiency</span><b>80%</b></div><div class="bar"><i style="width:80%"></i></div></div>
+        <div class="card skill"><div style="display:flex;gap:16px;align-items:center;"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8c4.4 0 8-1.1 8-2.5S16.4 3 12 3 4 4.1 4 5.5 7.6 8 12 8Zm-8-2.5v13C4 19.9 7.6 21 12 21s8-1.1 8-2.5v-13M4 12c0 1.4 3.6 2.5 8 2.5s8-1.1 8-2.5"/></svg></span><div><h3>MySQL</h3><p>Schema design, indexes, and query tuning.</p></div></div><div class="bar-meta"><span>Proficiency</span><b>70%</b></div><div class="bar"><i style="width:70%"></i></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services">
+    <div class="container">
+      <p class="eyebrow mono">// services</p>
+      <h2>What I can build for you</h2>
+      <p class="lead">From a single component to a complete application — here's where I can help.</p>
+      <div class="grid-3" style="margin-top:56px;">
+        <div class="card card-lift service"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v10H4zM9 20h6m-3-5v5"/></svg></span><h3>Frontend Development</h3><p>Modern, responsive and interactive interfaces with Vue and Tailwind CSS.</p></div>
+        <div class="card card-lift service"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v6H4zM4 13h16v6H4zM7.5 8h.01M7.5 16h.01"/></svg></span><h3>Backend Development</h3><p>Laravel-powered APIs and backend systems with clean architecture.</p></div>
+        <div class="card card-lift service"><span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3 9 5-9 5-9-5zM3 13l9 5 9-5"/></svg></span><h3>Full-Stack Development</h3><p>Complete web applications using Laravel and Vue, end to end.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS -->
+  <section id="projects" class="alt">
+    <div class="container">
+      <p class="eyebrow mono">// projects</p>
+      <h2>Selected work</h2>
+      <p class="lead">A few things I've designed and built. More in the works.</p>
+      <div class="grid-2" style="margin-top:56px;">
+        <div class="card project">
+          <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4zM7 9l3 3-3 3m5 0h5"/></svg></div>
+          <div class="body">
+            <h3>UI Component Library</h3>
+            <p class="desc">A reusable UI component library built with Vue and Tailwind.</p>
+            <ul class="tags"><li>Vue.js</li><li>Tailwind CSS</li><li>JavaScript</li><li>Vite</li></ul>
+            <div class="actions">
+              <span class="action"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.05.78 2.13 0 1.54-.01 2.78-.01 3.16 0 .31.21.67.8.55A11.52 11.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg>GitHub — soon</span>
+              <span class="action">Demo — soon</span>
+              <span class="action">Details — soon</span>
+            </div>
+          </div>
+        </div>
+        <div class="card project">
+          <div class="thumb"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v14H4zM7 9l3 3-3 3m5 0h5"/></svg></div>
+          <div class="body">
+            <h3>Task Management App</h3>
+            <p class="desc">A full-stack task management application designed to manage tasks, projects, and productivity workflows.</p>
+            <ul class="tags"><li>Laravel</li><li>Vue.js</li><li>Inertia</li><li>MySQL</li><li>Tailwind CSS</li></ul>
+            <div class="actions">
+              <span class="action">GitHub — soon</span>
+              <span class="action">Demo — soon</span>
+              <span class="action">Details — soon</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="container">
+      <p class="eyebrow mono">// experience</p>
+      <h2>Development journey</h2>
+      <p class="lead">How I got here — the path from first HTML tag to full-stack applications.</p>
+      <ol class="timeline" style="margin-top:56px;">
+        <li><h3>Learning Web Development</h3><p class="sub">Foundations</p><p class="d">HTML, CSS, and JavaScript fundamentals — building a strong base in how the web actually works.</p></li>
+        <li><h3>Laravel Development</h3><p class="sub">Backend</p><p class="d">MVC architecture, Eloquent ORM, routing, validation, and building server-side features with PHP.</p></li>
+        <li><h3>Vue Development</h3><p class="sub">Frontend</p><p class="d">Component-driven interfaces, reactivity, and the Composition API for maintainable frontends.</p></li>
+        <li><h3>Full-Stack Projects</h3><p class="sub">Integration</p><p class="d">Connecting Laravel backends with Vue frontends through Inertia — complete applications, end to end.</p></li>
+        <li><h3>Reusable UI Component Development</h3><p class="sub">Design systems</p><p class="d">Designing and building component libraries that keep interfaces consistent and teams fast.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="alt">
+    <div class="container">
+      <p class="eyebrow mono">// contact</p>
+      <h2>Let's build something</h2>
+      <p class="lead">Have a project in mind, or just want to say hi? My inbox is open.</p>
+      <div class="contact-grid">
+        <div>
+          <p class="lead" style="margin-top:0;">I'm open to freelance projects, collaboration, and full-time opportunities. Send a message and I'll get back to you as soon as I can.</p>
+          <a href="#" style="display:flex;align-items:center;gap:16px;margin-top:24px;text-decoration:none;" class="card">
+            <span class="icon-chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4zM4 7l8 6 8-6"/></svg></span>
+            <span><span style="display:block;font-size:12px;color:#737373;">Email me at</span><span style="display:block;font-size:14px;font-weight:600;color:#fff;">hello@johncalulut.dev</span></span>
+          </a>
+        </div>
+        <div class="card">
+          <form class="form-grid">
+            <div class="two">
+              <div class="field"><label for="n">Name</label><input id="n" type="text" placeholder="Your name"></div>
+              <div class="field"><label for="e">Email</label><input id="e" type="email" placeholder="you@example.com"></div>
+            </div>
+            <div class="field"><label for="s">Subject</label><input id="s" type="text" placeholder="What's this about?"></div>
+            <div class="field"><label for="m">Message</label><textarea id="m" rows="5" placeholder="Tell me about your project…"></textarea></div>
+            <div><a href="#" class="btn btn-primary">Send Message
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12h16m-6-6 6 6-6 6"/></svg></a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="footer-in">
+    <div><p class="name">John Lee Calulut</p><p class="role2">Frontend / Backend Developer</p></div>
+    <div style="display:flex;gap:12px;">
+      <span class="icon-chip" style="width:44px;height:44px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.11.79-.25.79-.55 0-.27-.01-1.17-.02-2.12-3.2.7-3.88-1.36-3.88-1.36-.52-1.33-1.28-1.68-1.28-1.68-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.72-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.19-3.09-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11.1 11.1 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.83 1.19 3.09 0 4.42-2.7 5.39-5.27 5.68.41.36.78 1.05.78 2.13 0 1.54-.01 2.78-.01 3.16 0 .31.21.67.8.55A11.52 11.52 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z"/></svg></span>
+      <span class="icon-chip" style="width:44px;height:44px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05a3.74 3.74 0 0 1 3.37-1.85c3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12ZM7.12 20.45H3.55V9h3.57v11.45Z"/></svg></span>
+    </div>
+  </div>
+  <div class="fine">© 2026 John Lee Liberato Calulut · Built with <span class="o">Laravel</span>, <span class="o">Vue</span> &amp; <span class="o">Tailwind CSS</span></div>
+</footer>
+
+</div>
+</body>
+</html>
